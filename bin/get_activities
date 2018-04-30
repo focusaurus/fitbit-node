@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+var config = require("config3");
+var request = require("superagent");
+var OAuth = require("oauth");
+require("superagent-oauth")(request);
+var oauth = new OAuth.OAuth(
+  config.fitbit.accessUrl,
+  config.fitbit.requestUrl,
+  config.fitbit.consumerKey,
+  config.fitbit.consumerSecret,
+  "1.0",
+  null,
+  "HMAC-SHA1"
+);
+// once you get the access token and secret
+request.get(config.fitbit.baseUrl + "/1/user/2GKSDB/activities/date/2014-05-22.json")
+  .sign(oauth, "794990b2544492c97cd592dc588ae16d", "b7ca6776698f47346c331b59449010f2")
+  .end(function (res) {
+    console.log(res.status, res.body);
+  });
